@@ -60,6 +60,20 @@ module ``about the stock example`` =
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+
+        let splitCommas (x:string) =
+            x.Split([|','|])
+
+        let digest = List.map splitCommas stockData
+        printfn "%A" digest.Head
+
+        let dateIndx = Array.findIndex (fun (x:string) -> x.ToLower() = "date") digest.Head
+        let openIndx = Array.findIndex (fun (x:string) -> x.ToLower() = "open") digest.Head
+        let closeIndx = Array.findIndex (fun (x:string) -> x.ToLower() = "close") digest.Head
+
+        let priceDiff (x:array<string>) = 
+            abs (System.Double.Parse(x.[openIndx]) - System.Double.Parse(x.[closeIndx]))
+
+        let result = (List.maxBy priceDiff digest.Tail).[dateIndx]
         
         AssertEquality "2012-03-13" result
